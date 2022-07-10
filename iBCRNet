@@ -1,0 +1,47 @@
+# this is R package using Gox-ph regression analysis for prostate cancer BCR-free survival prediction 
+
+library(survival)
+library(survminer)
+
+library(grid)
+library(lattice)
+library(Formula)
+library(ggplot2)
+library(SparseM)
+library(Hmisc)
+library(rms)
+library(survival)
+library(survivalROC)
+
+
+#不喜欢默认的颜色，先设置几个颜色
+train <- read.csv("rads.csv", header=TRUE)
+test <- read.csv("BCR_test_v43.csv", header=TRUE)
+
+dd = datadist(train)
+options(datadist="dd")
+summary(train$time)
+
+
+
+coxbcr<-cph(formula = Surv(time,status) ~., data=train, x=T, y=T, surv = T)  
+#,time.inc =2920
+
+
+head(train)
+CoxPHm4	CoxPHm5	GBMm4	GBMm5	DLm4	DLm5	DAmico	CAPRA	CAPRAS
+
+
+train <- within(train, {
+Coxm4<- factor(CoxPHm4, labels = c('low-risk', 'high-risk'))
+Coxm5<- factor(CoxPHm5, labels = c('low-risk', 'high-risk'))
+GBMm4<- factor(GBMm4, labels = c('low-risk', 'high-risk'))
+GBMm5<- factor(GBMm5, labels = c('low-risk', 'high-risk'))
+DLm4<- factor(DLm4, labels = c('low-risk', 'high-risk'))
+DLm5<- factor(DLm5, labels = c('low-risk', 'high-risk'))
+DAmico<- factor(DAmico, labels = c('low-risk', 'intermediate-risk', 'high-risk'))
+CAPRA<- factor(CAPRA, labels = c('low-risk', 'intermediate-risk', 'high-risk'))
+CAPRAS<- factor(CAPRAS, labels = c('low-risk', 'intermediate-risk', 'high-risk'))
+})
+
+
